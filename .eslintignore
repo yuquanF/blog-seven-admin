@@ -1,0 +1,6 @@
+/builds/
+/public/
+/dist/
+/*.js
+/node_modules/
+/tests/unit/LIcon.test.js
