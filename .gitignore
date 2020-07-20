@@ -21,5 +21,4 @@ yarn-error.log*
 *.sln
 *.sw*
 
-package-lock.json
 support_in_future.md
