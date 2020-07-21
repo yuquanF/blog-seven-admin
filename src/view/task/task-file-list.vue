@@ -13,6 +13,25 @@
           </div>
         </div>
       </sticky-top>
+      <sticky-top class="excel-names">
+        <el-dropdown @command="selectExcelName">
+          <span class="el-dropdown-link"> {{ dropTitle }} <i class="el-icon-arrow-down el-icon--right"></i> </span>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item v-for="item in excelNames" :key="item" :command="item">{{ item }}</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+        <el-popover placement="right" width="400" trigger="click" ref="popover">
+          <el-card class="box-card">
+            <div slot="header" class="clearfix">
+              <span>比对相差结果</span>
+            </div>
+            <div v-for="item in difference" :key="item">
+              {{ item }}
+            </div>
+          </el-card>
+          <el-button type="success"  slot="reference"  @click="compareWithExcelData" :disabled="loading">比对</el-button>
+        </el-popover>
+      </sticky-top>
       <el-table v-loading="loading" :data="files.rows" stripe border>
         <el-table-column prop="file_name" label="文件名" width="320px" sortable>
           <template slot-scope="scope">
@@ -42,6 +61,7 @@
 import { saveAs } from 'file-saver'
 import task from '@/model/task'
 import TaskFileModify from './task-file-modify'
+import { mapGetters } from 'vuex'
 
 export default {
   data() {
@@ -51,6 +71,9 @@ export default {
       files: {},
       loading: false,
       editFile: {},
+      compareData: [],
+      compareDataName: '',
+      difference: [],
     }
   },
   components: {
@@ -61,7 +84,42 @@ export default {
     this.task_name = this.$route.query.name
     await this.getTaskFiles()
   },
+  computed: {
+    ...mapGetters(['excelNames']),
+    dropTitle() {
+      return this.compareDataName ? this.compareDataName : '选择比对数据项'
+    },
+  },
   methods: {
+    selectExcelName(val) {
+      this.compareDataName = val
+    },
+    compareWithExcelData() {
+      const key = this.compareDataName
+      if (!key) {
+        this.$message('请先选择比对数据项')
+        return
+      }
+      const data = JSON.parse(localStorage.getItem(key))
+      this._compare(data)
+    },
+    _compare(data) {
+      if (!this.files.rows) {
+        return
+      }
+      const origin = new Set(data)
+      const target = new Set(this.files.rows.map(item => this._getChinese(item.file_name)))
+      let difference = new Set([...origin].filter(x => !target.has(x)))
+      this.difference = difference
+    },
+    _getChinese(data) {
+      if (typeof data !== 'string') {
+        return
+      }
+      const regexp = /\p{sc=Han}+/gu
+      const datas = data.match(regexp)
+      return datas.join('')
+    },
     async editClose() {
       this.$refs.popover.$el.click()
       await this.getTaskFiles()
@@ -146,6 +204,16 @@ export default {
       display: flex;
       justify-content: space-between;
       align-items: center;
+    }
+  }
+
+  .excel-names {
+    padding: 20px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    .el-dropdown-link {
+      padding: 20px;
     }
   }
 

@@ -18,4 +18,8 @@ export default {
     commit(types.REMOVE_UNREAD_MESSAGE, message.id)
     commit(types.ADD_READED_MESSAGE, message)
   },
+
+  setExcelNames({ commit }, name) {
+    commit(types.SET_EXCEL_NAMES, name)
+  }
 }

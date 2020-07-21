@@ -47,4 +47,10 @@ export default {
   [types.SET_REFERSH_OPTION](state, option) {
     state.refreshOptions = option
   },
+
+  [types.SET_EXCEL_NAMES](state, payload) {
+    const names = state.excelNames
+    names.push(payload)
+    state.excelNames = names
+  }
 }

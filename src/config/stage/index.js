@@ -1,6 +1,7 @@
 import Utils from '@/lib/util/util'
 import adminConfig from './admin'
 import categoryConfig from './category'
+import excelConfig from './excel'
 import taskConfig from './task'
 // eslint-disable-next-line import/no-mutable-exports
 let homeRouter = [
@@ -47,6 +48,7 @@ let homeRouter = [
   categoryConfig,
   taskConfig,
   adminConfig,
+  excelConfig,
 ]
 
 // 处理顺序

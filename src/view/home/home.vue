@@ -122,7 +122,7 @@ export default {
 .el-main {
   overflow-y: auto;
   position: relative;
-  padding: 0;
+  padding-bottom: 40px;
 }
 
 .backTop {

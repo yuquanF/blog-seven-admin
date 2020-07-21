@@ -19,6 +19,8 @@ const deepTravel = (obj, fuc) => {
   }
 }
 
+export const excelNames = state => state.excelNames
+
 export const logined = state => state.logined
 
 export const user = state => state.user
