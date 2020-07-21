@@ -1,5 +1,5 @@
 <template>
-  <div class="lin-table">
+  <div class="my-table">
     <el-table
       ref="linTable"
       v-loading="loading"
@@ -217,7 +217,10 @@ export default {
         this.oldKey = this.oldKey.filter(item => item !== row.key)
         const data = this.oldVal.filter(item => item.key !== row.key)
         this.handleSelectionChange(data)
-        this.toggleSelection(this.currentData.filter(item => item.key === row.key), false)
+        this.toggleSelection(
+          this.currentData.filter(item => item.key === row.key),
+          false,
+        )
       }
       // 选中-单选
       if (this.currentOldRow && this.currentOldRow.key === row.key) {
@@ -235,8 +238,9 @@ export default {
       this.currentPage = page
       this.selectedTableData = JSON.parse(sessionStorage.getItem('selectedTableData'))
       this.currentData = this.tableData.filter(
-        (item, index) => index >= (this.currentPage - 1) * this.pagination.pageSize
-          && index < this.currentPage * this.pagination.pageSize,
+        (item, index) =>
+          index >= (this.currentPage - 1) * this.pagination.pageSize &&
+          index < this.currentPage * this.pagination.pageSize,
       ) // eslint-disable-line
       this.$emit('currentChange', page)
       // 已选中的数据打勾
@@ -391,7 +395,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.lin-table {
+.my-table {
   position: relative;
 }
 
@@ -428,7 +432,7 @@ export default {
 </style>
 
 <style>
-.lin-table .rowClassName {
+.my-table .rowClassName {
   cursor: move !important;
 }
 </style>

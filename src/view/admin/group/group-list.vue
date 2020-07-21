@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="title">分组列表信息</div>
-    <lin-table
+    <my-table
       :tableColumn="tableColumn"
       :tableData="tableData"
       :operate="operate"
@@ -11,7 +11,7 @@
       @row-click="rowClick"
       v-loading="loading"
     >
-    </lin-table>
+    </my-table>
     <el-dialog
       title="分组信息"
       :append-to-body="true"
@@ -48,11 +48,11 @@
 
 <script>
 import Admin from '@/lib/model/admin'
-import LinTable from '@/component/base/table/lin-table'
+import MyTable from '@/components/my-table'
 
 export default {
   components: {
-    LinTable,
+    MyTable,
   },
   inject: ['eventBus'],
   data() {

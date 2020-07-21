@@ -4,7 +4,7 @@
     <div class="container" v-if="!showEdit">
       <div class="header"><div class="title">任务列表</div></div>
       <!-- 表格 -->
-      <lin-table
+      <my-table
         :tableColumn="tableColumn"
         :tableData="tableData"
         :operate="operate"
@@ -12,7 +12,7 @@
         @handleEdit="handleEdit"
         @handleDelete="handleDelete"
         v-loading="loading"
-      ></lin-table>
+      ></my-table>
     </div>
 
     <!-- 编辑页面 -->
@@ -22,12 +22,12 @@
 
 <script>
 import task from '@/model/task'
-import LinTable from '@/component/base/table/lin-table'
+import MyTable from '@/components/my-table'
 import TaskModify from './task-modify'
 
 export default {
   components: {
-    LinTable,
+    MyTable,
     TaskModify,
   },
   data() {

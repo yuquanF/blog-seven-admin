@@ -4,7 +4,7 @@
       <div class="log-header">
         <div class="header-left"><p class="title">日志信息</p></div>
         <div class="header-right" v-permission="'搜索日志'">
-          <lin-search @query="onQueryChange" ref="searchKeyword" />
+          <search @query="onQueryChange" ref="searchKeyword" />
           <el-dropdown
             size="medium"
             style="margin: 0 10px;"
@@ -31,7 +31,7 @@
       <el-divider v-if="!keyword"></el-divider>
     </sticky-top>
     <transition name="fade">
-      <div class="search" v-if="keyword">
+      <div class="search-result" v-if="keyword">
         <p class="search-tip">
           搜索“<span class="search-keyword">{{ keyword }}</span
           >”， 找到 <span class="search-num">{{ totalCount }}</span> 条日志信息
@@ -73,12 +73,12 @@
 import { mapGetters } from 'vuex'
 import log from 'lib/model/log'
 import { searchLogKeyword } from 'lib/util/search'
-import LinSearch from '@/component/base/search/lin-search'
-import DatePicker from '@/component/base/date-picker/date-picker'
+import Search from '@/components/search'
+import DatePicker from '@/components/date-picker'
 
 export default {
   components: {
-    LinSearch,
+    Search,
     DatePicker,
   },
   data() {
@@ -300,7 +300,7 @@ export default {
     }
   }
 
-  .search {
+  .search-result {
     height: 52px;
     width: 100%;
     background: rgba(57, 99, 188, 0.1);

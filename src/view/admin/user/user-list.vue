@@ -8,7 +8,7 @@
       </el-select>
     </div>
     <!-- 表格 -->
-    <lin-table
+    <my-table
       :tableColumn="tableColumn"
       :tableData="tableData"
       :operate="operate"
@@ -16,7 +16,7 @@
       @handleDelete="handleDelete"
       @row-click="rowClick"
       v-loading="loading"
-    ></lin-table>
+    ></my-table>
     <!-- 分页 -->
     <div class="pagination">
       <el-pagination
@@ -64,12 +64,12 @@
 
 <script>
 import Admin from '@/lib/model/admin'
-import LinTable from '@/component/base/table/lin-table'
+import MyTable from '@/components/my-table'
 import UserInfo from './user-info'
 import UserPassword from './user-password'
 
 export default {
-  components: { LinTable, UserInfo, UserPassword },
+  components: { MyTable, UserInfo, UserPassword },
   inject: ['eventBus'],
   data() {
     return {

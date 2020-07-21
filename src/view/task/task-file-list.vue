@@ -13,7 +13,7 @@
           </div>
         </div>
       </sticky-top>
-      <sticky-top class="excel-names">
+      <div class="excel-names">
         <el-dropdown @command="selectExcelName">
           <span class="el-dropdown-link"> {{ dropTitle }} <i class="el-icon-arrow-down el-icon--right"></i> </span>
           <el-dropdown-menu slot="dropdown">
@@ -29,9 +29,9 @@
               {{ item }}
             </div>
           </el-card>
-          <el-button type="success"  slot="reference"  @click="compareWithExcelData" :disabled="loading">比对</el-button>
+          <el-button type="success" slot="reference" @click="compareWithExcelData" :disabled="loading">比对</el-button>
         </el-popover>
-      </sticky-top>
+      </div>
       <el-table v-loading="loading" :data="files.rows" stripe border>
         <el-table-column prop="file_name" label="文件名" width="320px" sortable>
           <template slot-scope="scope">
@@ -59,9 +59,9 @@
 
 <script>
 import { saveAs } from 'file-saver'
+import { mapGetters } from 'vuex'
 import task from '@/model/task'
 import TaskFileModify from './task-file-modify'
-import { mapGetters } from 'vuex'
 
 export default {
   data() {
@@ -109,7 +109,7 @@ export default {
       }
       const origin = new Set(data)
       const target = new Set(this.files.rows.map(item => this._getChinese(item.file_name)))
-      let difference = new Set([...origin].filter(x => !target.has(x)))
+      const difference = new Set([...origin].filter(x => !target.has(x)))
       this.difference = difference
     },
     _getChinese(data) {
@@ -208,6 +208,7 @@ export default {
   }
 
   .excel-names {
+    background: #ffffff;
     padding: 20px;
     display: flex;
     justify-content: flex-end;

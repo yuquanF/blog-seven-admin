@@ -4,7 +4,7 @@
     <div class="container" v-if="!showEdit">
       <div class="header"><div class="title">分类列表</div></div>
       <!-- 表格 -->
-      <lin-table
+      <my-table
         :tableColumn="tableColumn"
         :tableData="tableData"
         :operate="operate"
@@ -12,7 +12,7 @@
         @handleDelete="handleDelete"
         @row-click="rowClick"
         v-loading="loading"
-      ></lin-table>
+      ></my-table>
     </div>
 
     <!-- 编辑页面 -->
@@ -22,17 +22,20 @@
 
 <script>
 import category from '@/model/category'
-import LinTable from '@/component/base/table/lin-table'
+import MyTable from '@/components/my-table'
 import CategoryModify from './category-modify'
 
 export default {
   components: {
-    LinTable,
+    MyTable,
     CategoryModify,
   },
   data() {
     return {
-      tableColumn: [{ prop: 'name', label: '分类名' }, { prop: 'summary', label: '简介' }],
+      tableColumn: [
+        { prop: 'name', label: '分类名' },
+        { prop: 'summary', label: '简介' },
+      ],
       tableData: [],
       operate: [],
       showEdit: false,

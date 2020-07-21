@@ -1,6 +1,6 @@
 <template>
   <div>
-    <upload-excel-component :on-success="handleSuccess" :before-upload="beforeUpload" />
+    <upload-excel :on-success="handleSuccess" :before-upload="beforeUpload" />
     <el-table
       :data="tableData"
       border
@@ -14,12 +14,12 @@
 </template>
 
 <script>
-import UploadExcelComponent from '@/component/base/upload-excel/index.vue'
+import UploadExcel from '@/components/upload-excel'
 import { get } from 'lodash'
 import { mapActions } from 'vuex'
 
 export default {
-  components: { UploadExcelComponent },
+  components: { UploadExcel },
   data() {
     return {
       tableData: [],
@@ -60,15 +60,15 @@ export default {
           if (promptRes.value) {
             const { property } = column
             let data = this.tableData
-            data = data.map(item => {
-              return get(item, property)
-            })
+            data = data.map(item => get(item, property))
             const name = `excel_${promptRes.value}`
             this.setExcelNames(name)
             localStorage.setItem(name, JSON.stringify(data))
           }
         }
-      } catch (error) {}
+      } catch (error) {
+        // console.log(error)
+      }
     },
   },
 }
