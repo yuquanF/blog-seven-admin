@@ -25,7 +25,7 @@
               </el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
-          <lin-date-picker @dateChange="handleDateChange" ref="searchDate" class="date"> </lin-date-picker>
+          <date-picker @dateChange="handleDateChange" ref="searchDate" class="date"> </date-picker>
         </div>
       </div>
       <el-divider v-if="!keyword"></el-divider>
@@ -74,12 +74,12 @@ import { mapGetters } from 'vuex'
 import log from 'lib/model/log'
 import { searchLogKeyword } from 'lib/util/search'
 import LinSearch from '@/component/base/search/lin-search'
-import LinDatePicker from '@/component/base/date-picker/lin-date-picker'
+import DatePicker from '@/component/base/date-picker/date-picker'
 
 export default {
   components: {
     LinSearch,
-    LinDatePicker,
+    DatePicker,
   },
   data() {
     return {
