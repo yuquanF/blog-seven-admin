@@ -36,11 +36,11 @@ let isLoginRequired = routeName => {
 }
 
 const router = new Router({
-  // mode: 'history',
+  mode: 'history',
   scrollBehavior: () => ({
     y: 0,
   }),
-  base: process.env.BASE_URL,
+  base: 'admin',
   routes,
 })
 

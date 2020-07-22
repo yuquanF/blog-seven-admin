@@ -8,6 +8,7 @@ module.exports = {
   lintOnSave: true,
   productionSourceMap: false,
   // assetsDir: 'static',
+  publicPath: process.env.NODE_ENV === 'production' ? '/admin' : '/',
   chainWebpack: config => {
     config.resolve.alias
       .set('@', resolve('src'))

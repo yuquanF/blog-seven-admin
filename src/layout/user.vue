@@ -348,8 +348,8 @@ export default {
       done()
     },
     outLogin() {
-      window.location.reload(true)
       this.loginOut()
+      this.$router.replace('/')
     },
     submitForm(formName) {
       if (this.form.old_password === '' && this.form.new_password === '' && this.form.confirm_password === '') {
