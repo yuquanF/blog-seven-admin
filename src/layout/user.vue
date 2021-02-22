@@ -5,7 +5,7 @@
         <div class="nav-avatar"><img :src="user.avatar || defaultAvatar" alt="头像" /></div>
       </span>
       <el-dropdown-menu slot="dropdown" class="user-box">
-        <div class="user-info">
+        <div class="user-info"  v-if="user.avatar">
           <div class="avatar" title="点击修改头像">
             <img :src="user.avatar || defaultAvatar" alt="头像" />
             <label class="mask">
