@@ -1,9 +1,10 @@
 <template>
   <div>
     <div class="container">
+      <!-- 顶部信息栏 -->
       <sticky-top>
         <div class="header">
-          <el-button type="primary" @click="downAll" :disabled="loading">下载全部</el-button>
+          <!-- <el-button type="primary" @click="downAll" :disabled="loading">全部下载</el-button> -->
           <div class="header-left">
             <p class="title">任务编号： {{ task_id }}</p>
             <p class="title">任务名： {{ task_name }}</p>
@@ -13,6 +14,8 @@
           </div>
         </div>
       </sticky-top>
+
+      <!-- 比对操作 -->
       <div class="excel-names">
         <el-dropdown @command="selectExcelName">
           <span class="el-dropdown-link"> {{ dropTitle }} <i class="el-icon-arrow-down el-icon--right"></i> </span>
@@ -20,11 +23,9 @@
             <el-dropdown-item v-for="item in excelNames" :key="item" :command="item">{{ item }}</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
-        <el-popover placement="right" width="400" trigger="click" ref="popover">
+        <el-popover trigger="click" title="比对相差结果" width="300" placement="right-end" :disabled="!compared">
+          <!-- compared用来避免第一次没选择比对文件时，弹出显示结果窗口 -->
           <el-card class="box-card">
-            <div slot="header" class="clearfix">
-              <span>比对相差结果</span>
-            </div>
             <div v-for="item in difference" :key="item">
               {{ item }}
             </div>
@@ -32,7 +33,10 @@
           <el-button type="success" slot="reference" @click="compareWithExcelData" :disabled="loading">比对</el-button>
         </el-popover>
       </div>
-      <el-table v-loading="loading" :data="files.rows" stripe border>
+
+      <!-- 数据展示表格 -->
+      <el-table v-loading="loading" :data="currentData" stripe border>
+        <el-table-column type="index" label="序号" width="50"> </el-table-column>
         <el-table-column prop="file_name" label="文件名" width="320px" sortable>
           <template slot-scope="scope">
             <el-tag size="medium" effect="plain" type="info" @click="downOne(scope.row)">{{
@@ -42,18 +46,29 @@
         </el-table-column>
         <el-table-column label="操作" width="180px">
           <template slot-scope="scope">
-            <el-popover placement="right" width="400" trigger="click" ref="popover">
+            <el-popover placement="right" width="400" trigger="click">
               <task-file-modify @editClose="editClose" :file="editFile" />
               <el-button slot="reference" @click="handleEdit(scope.row)">编辑</el-button>
             </el-popover>
-            <el-button type="danger" style="margin-left: 10px;" @click="handleDelete(scope.row)">删除</el-button>
+            <el-button type="danger" style="margin-left: 10px" @click="handleDelete(scope.row)">删除</el-button>
           </template>
         </el-table-column>
         <el-table-column prop="file_url" label="下载地址" />
       </el-table>
-    </div>
 
-    <!-- 编辑页面 -->
+      <!-- 分页 -->
+      <el-pagination
+        class="pagination"
+        v-if="pagination"
+        small
+        background
+        layout="sizes, prev, pager, next, total"
+        :page-size="pagination.pageSize ? pagination.pageSize : 10"
+        :total="pagination.pageTotal ? pagination.pageTotal : null"
+        @current-change="currentChange"
+        @size-change="sizeChange"
+      ></el-pagination>
+    </div>
   </div>
 </template>
 
@@ -66,14 +81,20 @@ import TaskFileModify from './task-file-modify'
 export default {
   data() {
     return {
-      task_id: '',
-      task_name: '',
+      pagination: {
+        pageSize: 10,
+        pageTotal: null,
+      },
+      compared: false,
       files: {},
       loading: false,
       editFile: {},
       compareData: [],
-      compareDataName: '',
+      compareDataName: '', // 选中的比对的源文件名称
       difference: [],
+      currentData: [], // 每次切换页码的时候要给table传入不同的数据
+      currentPage: 1, // 当前选中页
+      currentIndex: 1, // 当前索引，切换页面的时候需要重新计算
     }
   },
   components: {
@@ -91,38 +112,74 @@ export default {
     },
   },
   methods: {
+    // 选择比对的源文件
     selectExcelName(val) {
       this.compareDataName = val
     },
+    // 比对
     compareWithExcelData() {
       const key = this.compareDataName
       if (!key) {
-        this.$message('请先选择比对数据项')
+        this.$message({
+          message: '请先选择比对数据项',
+          type: 'error',
+          center: true,
+        })
         return
       }
       const data = JSON.parse(localStorage.getItem(key))
       this._compare(data)
     },
     _compare(data) {
+      this.compared = true // 用来避免第一次没选择比对文件时，弹出显示结果窗口
       if (!this.files.rows) {
         return
       }
       const origin = new Set(data)
-      const target = new Set(this.files.rows.map(item => this._getChinese(item.file_name)))
+      const target = new Set(this.files.rows.map(item => this._fileName(item.file_name)))
       const difference = new Set([...origin].filter(x => !target.has(x)))
       this.difference = difference
     },
-    _getChinese(data) {
-      if (typeof data !== 'string') {
-        return
-      }
-      const regexp = /\p{sc=Han}+/gu
-      const datas = data.match(regexp)
-      return datas.join('')
+    _fileName(data) {
+      return data.split('.')[0]
     },
-    async editClose() {
-      this.$refs.popover.$el.click()
-      await this.getTaskFiles()
+    // 切换当前页
+    currentChange(page) {
+      this.currentPage = page
+      this.currentData = this.tableData.filter(
+        (item, index) =>
+          index >= (this.currentPage - 1) * this.pagination.pageSize &&
+          index < this.currentPage * this.pagination.pageSize,
+      )
+      // 切换行索引
+      this.currentIndex = (this.currentPage - 1) * this.pagination.pageSize + 1
+    },
+    // 每页显示数量变化时触发
+    sizeChange(size) {
+      this.currentPage = 1
+      this.pagination.pageSize = size
+      this.currentData = this.tableData.filter(
+        (item, index) =>
+          index >= (this.currentPage - 1) * this.pagination.pageSize &&
+          index < this.currentPage * this.pagination.pageSize,
+      )
+    },
+    // 关闭编辑栏，刷新数据
+    async editClose(filename) {
+      const elBody = document.getElementsByTagName('body')[0]
+      elBody.click()
+
+      const fileId = this.editFile.file_id
+      if (fileId) {
+        this.currentData.map(item => {
+          if (item.file_id === fileId) {
+            item.file_name = filename
+          }
+          return item
+        })
+      } else {
+        await this.getTaskFiles()
+      }
     },
     handleEdit(file) {
       this.editFile = file
@@ -162,10 +219,18 @@ export default {
         this.loading = false
       }, 2000)
     },
+    // 获取所有任务文件
     async getTaskFiles() {
       try {
         const taskFiles = await task.getTaskFiles(this.task_id)
         this.files = taskFiles
+        this.pagination.pageTotal = this.files.count
+        this.tableData = this.files.rows
+        this.currentData = this.tableData.filter(
+          (item, index) =>
+            index >= (this.currentPage - 1) * this.pagination.pageSize &&
+            index < this.currentPage * this.pagination.pageSize,
+        )
       } catch (error) {
         if (error.code === 10020) {
           this.files = []
@@ -221,6 +286,12 @@ export default {
   .el-tag {
     font-size: 16px !important;
     cursor: pointer;
+  }
+  .pagination {
+    display: flex;
+    justify-content: flex-end;
+    margin-right: -10px;
+    margin-top: 15px;
   }
 }
 </style>

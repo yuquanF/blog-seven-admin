@@ -16,7 +16,6 @@
 </template>
 
 <script>
-import category from '@/model/category'
 import task from '@/model/task'
 
 export default {
@@ -50,12 +49,12 @@ export default {
         this.loading = false
         if (res.code < window.MAX_SUCCESS_CODE) {
           this.$message.success(`${res.message}`)
-          this.$emit('editClose')
+          this.$emit('editClose', this.filename) // 将修改后的filename传回
         }
       }, 300)
     },
     // 重置表单
-    reset(formName) {
+    reset() {
       this.filename = ''
     },
   },
