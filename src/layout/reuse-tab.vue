@@ -3,6 +3,7 @@
     <swiper :options="swiperOption" class="reuse-tab-wrap">
       <swiper-slide v-for="(item, index) in histories" :key="item.path">
         <router-link
+          tag="div"
           class="reuse-tab-item"
           :class="item.path === $route.path ? 'active' : ''"
           :to="item.path"
@@ -220,39 +221,41 @@ export default {
 <style lang="scss" scoped>
 .swiper-slide {
   width: auto;
-  min-width: 126px;
   display: flex;
-  height: $reusetab-height;
+  height: 30px;
   flex-direction: column;
   justify-content: center;
-  background-color: $reuse-tab-item-background;
-  color: $right-side-font-color;
+  background-color: #eef4f9;
+  color: #666666;
+  cursor: pointer;
 }
 
 .reuse-tab-wrap {
   bottom: 0;
   left: 0;
   user-select: none;
-  height: $reusetab-height;
+  height: 30px;
   background: $header-background;
-  font-size: 14px;
+  font-size: 10px;
   color: #8c98ae;
   display: flex;
   align-items: center;
   overflow: hidden;
+  padding: 0 10px;
 
   .reuse-tab-item {
     box-sizing: border-box;
     width: auto;
-    height: $reusetab-height;
-    min-width: 126px;
+    height: 30px;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 0 1em;
-    margin-right: 1px;
+    padding: 0 4px;
+    margin-right: 4px;
+    border: 1px solid #d8dce5;
     position: relative;
     white-space: nowrap;
+    color: $theme;
 
     > i {
       color: $theme;
@@ -264,14 +267,6 @@ export default {
     }
 
     &:hover {
-      background: $theme;
-      border: none;
-      color: #fff;
-
-      > i {
-        color: #fff;
-      }
-
       .el-icon-close {
         position: absolute;
         display: inline-block;
@@ -295,7 +290,7 @@ export default {
 
   .active {
     box-sizing: border-box;
-    height: 40px;
+    height: 30px;
     color: #ffffff;
     background: $theme;
     border: none;

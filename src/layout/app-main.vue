@@ -2,7 +2,9 @@
   <section class="container">
     <div class="wrapper" id="wrapper">
       <transition name="fade-transform" mode="out-in">
-        <router-view></router-view>
+        <keep-alive>
+          <router-view></router-view>
+        </keep-alive>
       </transition>
     </div>
   </section>
@@ -14,7 +16,7 @@ export default {
   watch: {
     $route() {
       if (this.$previewInstance) {
-        this.$previewInstance.destroy()
+        // this.$previewInstance.destroy()
       }
     },
   },
