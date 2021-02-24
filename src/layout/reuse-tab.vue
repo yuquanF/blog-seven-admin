@@ -164,7 +164,11 @@ export default {
       }
     },
     closeOthers() {
-      this.$router.push(this.histories[this.index].path)
+      // eslint-disable-next-line prefer-destructuring
+      const path = this.histories[this.index].path
+      if (this.$route.path !== path) {
+        this.$router.replace(path)
+      }
       this.histories = []
     },
     closeLeft() {
