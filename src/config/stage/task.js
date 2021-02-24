@@ -33,6 +33,7 @@ const taskRouter = {
       route: '/task/filelist/:id',
       filePath: 'view/task/task-file-list.vue',
       inNav: false,
+      noHistory: true,
     },
   ],
 }

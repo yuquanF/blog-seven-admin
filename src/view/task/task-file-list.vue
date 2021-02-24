@@ -100,6 +100,9 @@ export default {
   components: {
     TaskFileModify,
   },
+  deactivated() {
+    this.$destroy()
+  },
   async created() {
     this.task_id = this.$route.params.id
     this.task_name = this.$route.query.name
@@ -147,9 +150,8 @@ export default {
     currentChange(page) {
       this.currentPage = page
       this.currentData = this.tableData.filter(
-        (item, index) =>
-          index >= (this.currentPage - 1) * this.pagination.pageSize &&
-          index < this.currentPage * this.pagination.pageSize,
+        (item, index) => index >= (this.currentPage - 1) * this.pagination.pageSize
+          && index < this.currentPage * this.pagination.pageSize,
       )
       // 切换行索引
       this.currentIndex = (this.currentPage - 1) * this.pagination.pageSize + 1
@@ -159,9 +161,8 @@ export default {
       this.currentPage = 1
       this.pagination.pageSize = size
       this.currentData = this.tableData.filter(
-        (item, index) =>
-          index >= (this.currentPage - 1) * this.pagination.pageSize &&
-          index < this.currentPage * this.pagination.pageSize,
+        (item, index) => index >= (this.currentPage - 1) * this.pagination.pageSize
+          && index < this.currentPage * this.pagination.pageSize,
       )
     },
     // 关闭编辑栏，刷新数据
@@ -227,9 +228,8 @@ export default {
         this.pagination.pageTotal = this.files.count
         this.tableData = this.files.rows
         this.currentData = this.tableData.filter(
-          (item, index) =>
-            index >= (this.currentPage - 1) * this.pagination.pageSize &&
-            index < this.currentPage * this.pagination.pageSize,
+          (item, index) => index >= (this.currentPage - 1) * this.pagination.pageSize
+            && index < this.currentPage * this.pagination.pageSize,
         )
       } catch (error) {
         if (error.code === 10020) {

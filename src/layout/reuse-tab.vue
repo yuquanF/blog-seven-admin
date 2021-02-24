@@ -59,6 +59,9 @@ export default {
   watch: {
     $route(to) {
       // 对路由变化作出响应...
+      if (to.meta && to.meta.noHistory) {
+        return
+      }
       const { histories } = this
       const flag = histories.find(item => item.path === to.path)
       if (flag) {
@@ -68,7 +71,7 @@ export default {
       ele.stageId = to.name
       ele.path = to.path
       ele.routePath = to.matched[to.matched.length - 1].path
-      this.histories = [ele, ...histories]
+      this.histories = [...histories, ele]
     },
     logined(val) {
       if (val) {
@@ -156,7 +159,9 @@ export default {
     },
     closeAll() {
       this.histories = []
-      this.$router.push(this.defaultRoute)
+      if (this.$route.path !== '/about') {
+        this.$router.push('/about')
+      }
     },
     closeOthers() {
       this.$router.push(this.histories[this.index].path)
