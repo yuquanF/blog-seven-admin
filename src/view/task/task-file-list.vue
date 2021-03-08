@@ -104,9 +104,11 @@ export default {
     this.$destroy()
   },
   async created() {
+    this.loading = true
     this.task_id = this.$route.params.id
     this.task_name = this.$route.query.name
     await this.getTaskFiles()
+    this.loading = false
   },
   computed: {
     ...mapGetters(['excelNames']),
