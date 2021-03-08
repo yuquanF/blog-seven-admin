@@ -1,6 +1,7 @@
 <template>
   <div>
     <div class="container">
+      <refresh @refresh="handleRefresh"></refresh>
       <!-- 顶部信息栏 -->
       <sticky-top>
         <div class="header">
@@ -76,6 +77,7 @@
 import { saveAs } from 'file-saver'
 import { mapGetters } from 'vuex'
 import task from '@/model/task'
+import Refresh from '@/components/refresh'
 import TaskFileModify from './task-file-modify'
 
 export default {
@@ -99,6 +101,7 @@ export default {
   },
   components: {
     TaskFileModify,
+    Refresh,
   },
   deactivated() {
     this.$destroy()
@@ -117,6 +120,11 @@ export default {
     },
   },
   methods: {
+    async handleRefresh() {
+      this.loading = true
+      await this.getTaskFiles()
+      this.loading = false
+    },
     // 选择比对的源文件
     selectExcelName(val) {
       this.compareDataName = val

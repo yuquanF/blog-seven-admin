@@ -2,17 +2,18 @@
   <div>
     <!-- 列表页面 -->
     <div class="container" v-if="!showEdit">
+      <refresh @refresh="handleRefresh"></refresh>
       <div class="header"><div class="title">任务列表</div></div>
 
       <!-- 数据展示表格 -->
-      <el-table v-loading="loading" :data="currentData" stripe border >
+      <el-table v-loading="loading" :data="currentData" stripe border>
         <el-table-column type="index" label="序号" width="50"> </el-table-column>
         <el-table-column prop="id" label="上传编号" width="100"></el-table-column>
-        <el-table-column prop="code" label="上传码" width="100" ></el-table-column>
+        <el-table-column prop="code" label="上传码" width="100"></el-table-column>
         <el-table-column prop="size" label="单个文件上传限制（兆）" width="100"></el-table-column>
         <el-table-column prop="creator" label="创建人"></el-table-column>
         <el-table-column prop="name" label="任务名"></el-table-column>
-        <el-table-column label="操作" >
+        <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button slot="reference" @click="handleSee(scope)">查看</el-button>
             <el-button slot="reference" @click="handleEdit(scope)">编辑</el-button>
@@ -42,11 +43,13 @@
 
 <script>
 import task from '@/model/task'
+import Refresh from '@/components/refresh'
 import TaskModify from './task-modify'
 
 export default {
   components: {
     TaskModify,
+    Refresh,
   },
   data() {
     return {
@@ -70,6 +73,11 @@ export default {
     this.loading = false
   },
   methods: {
+    async handleRefresh() {
+      this.loading = true
+      await this.getTasks()
+      this.loading = false
+    },
     // 切换当前页
     currentChange(page) {
       this.currentPage = page

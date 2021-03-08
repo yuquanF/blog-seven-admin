@@ -1,5 +1,6 @@
 <template>
   <div>
+    <refresh @refresh="handleRefresh"></refresh>
     <!-- 列表页面 -->
     <div class="container" v-if="!showEdit">
       <div class="header"><div class="title">分类列表</div></div>
@@ -23,12 +24,14 @@
 <script>
 import category from '@/model/category'
 import MyTable from '@/components/my-table'
+import Refresh from '@/components/refresh'
 import CategoryModify from './category-modify'
 
 export default {
   components: {
     MyTable,
     CategoryModify,
+    Refresh,
   },
   data() {
     return {
@@ -40,6 +43,7 @@ export default {
       operate: [],
       showEdit: false,
       editCategory: {},
+      loading: false
     }
   },
   async created() {
@@ -57,6 +61,11 @@ export default {
     this.loading = false
   },
   methods: {
+    async handleRefresh() {
+      this.loading = true
+      await this.getCategorys()
+      this.loading = false
+    },
     async getCategorys() {
       try {
         const categorys = await category.getCategorys()
